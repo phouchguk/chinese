@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
+<style>
+  body {
+    font-family: sans-serif;
+  }
+</style>
+
+<div id="app" style="display: none;">
+  <char-test v-if="showTest" :item="items[index]" :index="index" :size="items.length" @back="back" @next="next"></char-test>
+  <char-list v-if="showList" :items="items" @back="back"></char-list>
+  <char-select v-if="items === null" :size="size" @review="review" @resize="resize" @test="test"></char-select>
+</div>
+
+<script src="app.js"></script>
