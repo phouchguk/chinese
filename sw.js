@@ -1,4 +1,4 @@
-const cacheName = "chinese-v1";
+const cacheName = "chinese-v2";
 
 const files = [
   "https://cdn.jsdelivr.net/npm/vue@2",

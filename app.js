@@ -57,6 +57,11 @@ Vue.component("char-test", {
         this.reveal = true;
       }
     },
+
+    prev() {
+      this.$emit("prev");
+      this.reveal = true;
+    },
   },
 
   mixins: [back],
@@ -65,10 +70,11 @@ Vue.component("char-test", {
 
   template: `
 <div>
-  <p><a href="#" @click.prevent="back">back</a></p>
+  <p><a href="#" @click.prevent="back">menu</a> <a v-if="index > 0" href="#" @click.prevent="prev">prev</a></p>
   <small>{{ index + 1 }}/{{ size }}</small>
   <p style="font-size:128pt; margin: 0;" @click="go">{{ item.char }}</p>
-  <p v-if="reveal">{{ item.meaning }}</p>
+  <p v-if="reveal">{{ item.meaning.join(" | ") }}</p>
+  <small v-if="reveal && item.alt">{{ item.alt }}</small>
 </div>`,
 });
 
@@ -79,10 +85,11 @@ Vue.component("char-list", {
 
   template: `
 <div>
-  <p><a href="#" @click.prevent="back">back</a></p>
+  <p><a href="#" @click.prevent="back">menu</a></p>
   <div v-for="item in items">
     <h1>{{ item.char }}</h1>
-    <p>{{ item.meaning }}</p>
+    <p>{{ item.meaning.join(" | ") }}</p>
+    <small v-if="item.alt">{{ item.alt }}</small>
   </div>
 </div>`,
 });
@@ -111,7 +118,16 @@ Vue.component("char-select", {
       const start = index;
       const end = start + this.size;
 
-      return char.slice(start, end);
+      const slice = char.slice(start, end);
+      slice.forEach((c) => {
+        shuffle(c.meaning);
+
+        if (c.alt) {
+          shuffle(c.alt);
+        }
+      });
+
+      return slice;
     },
 
     radical() {
@@ -168,8 +184,12 @@ function start([cx, rx]) {
   }
 
   for (let i = 0; i < rx.length; i++) {
-    //const c = char.find(c => c.char === rx[i].radical);
-    radical.push({ char: rx[i].radical, meaning: rx[i].english });
+    const c = char.find((c) => c.char === rx[i].radical);
+    radical.push({
+      char: rx[i].radical,
+      meaning: [rx[i].english],
+      alt: c ? c.meaning.join(" | ") : null,
+    });
   }
 
   new Vue({
@@ -205,6 +225,10 @@ function start([cx, rx]) {
         } else {
           this.index = i;
         }
+      },
+
+      prev() {
+        this.index -= 1;
       },
 
       resize(size) {

@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 
 <style>
   body {
     font-family: sans-serif;
   }
+
+  small {
+    color: #666;
+  }
 </style>
 
 <div id="app" style="display: none;">
-  <char-test v-if="showTest" :item="items[index]" :index="index" :size="items.length" @back="back" @next="next"></char-test>
+  <char-test v-if="showTest" :item="items[index]" :index="index" :size="items.length" @back="back" @next="next" @prev="prev"></char-test>
   <char-list v-if="showList" :items="items" @back="back"></char-list>
   <char-select v-if="items === null" :size="size" @review="review" @resize="resize" @test="test"></char-select>
 </div>
